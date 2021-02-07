@@ -1,6 +1,6 @@
-module github.com/xesina/golang-echo-realworld-example-app
+module github.com/kenshin579/analyzing-golang-echo-realworld-example-app
 
-go 1.12
+go 1.15
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
@@ -11,6 +11,7 @@ require (
 	github.com/go-playground/universal-translator v0.16.0 // indirect
 	github.com/gosimple/slug v1.5.0
 	github.com/jinzhu/gorm v1.9.8
+	github.com/labstack/echo v3.3.10+incompatible // indirect
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/labstack/gommon v0.3.0
 	github.com/leodido/go-urn v1.1.0 // indirect

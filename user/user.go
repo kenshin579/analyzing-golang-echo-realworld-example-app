@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/xesina/golang-echo-realworld-example-app/model"
+	"github.com/kenshin579/analyzing-golang-echo-realworld-example-app/model"
 )
 
 type Store interface {

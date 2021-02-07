@@ -3,9 +3,9 @@ package handler
 import (
 	"time"
 
-	"github.com/xesina/golang-echo-realworld-example-app/model"
-	"github.com/xesina/golang-echo-realworld-example-app/user"
-	"github.com/xesina/golang-echo-realworld-example-app/utils"
+	"github.com/kenshin579/analyzing-golang-echo-realworld-example-app/model"
+	"github.com/kenshin579/analyzing-golang-echo-realworld-example-app/user"
+	"github.com/kenshin579/analyzing-golang-echo-realworld-example-app/utils"
 	"github.com/labstack/echo/v4"
 )
 

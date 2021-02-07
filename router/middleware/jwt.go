@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/kenshin579/analyzing-golang-echo-realworld-example-app/utils"
 	"github.com/labstack/echo/v4"
-	"github.com/xesina/golang-echo-realworld-example-app/utils"
 )
 
 type (

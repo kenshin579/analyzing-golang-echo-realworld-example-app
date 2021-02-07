@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"github.com/kenshin579/analyzing-golang-echo-realworld-example-app/router/middleware"
+	"github.com/kenshin579/analyzing-golang-echo-realworld-example-app/utils"
 	"github.com/labstack/echo/v4"
-	"github.com/xesina/golang-echo-realworld-example-app/router/middleware"
-	"github.com/xesina/golang-echo-realworld-example-app/utils"
 )
 
 func (h *Handler) Register(v1 *echo.Group) {
