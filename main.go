@@ -27,18 +27,20 @@ import (
 // @name Authorization
 
 func main() {
-	r := router.New()
+	router := router.New()
 
-	r.GET("/swagger/*", echoSwagger.WrapHandler)
+	router.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	v1 := r.Group("/api")
+	v1 := router.Group("/api")
 
-	d := db.New()
-	db.AutoMigrate(d)
+	database := db.New()
+	db.AutoMigrate(database)
 
-	us := store.NewUserStore(d)
-	as := store.NewArticleStore(d)
-	h := handler.NewHandler(us, as)
-	h.Register(v1)
-	r.Logger.Fatal(r.Start("127.0.0.1:8080"))
+	//repository 역할을 함
+	userStore := store.NewUserStore(database)
+	articleStore := store.NewArticleStore(database)
+
+	handler := handler.NewHandler(userStore, articleStore)
+	handler.Register(v1)
+	router.Logger.Fatal(router.Start("127.0.0.1:8080"))
 }
