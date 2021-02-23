@@ -22,6 +22,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	profiles.DELETE("/:username/follow", h.Unfollow)
 
 	articles := v1.Group("/articles", middleware.JWTWithConfig(
+		//feed인 경우에만 JWT 인증을 하지 않도록 함
 		middleware.JWTConfig{
 			Skipper: func(c echo.Context) bool {
 				if c.Request().Method == "GET" && c.Path() != "/api/articles/feed" {
