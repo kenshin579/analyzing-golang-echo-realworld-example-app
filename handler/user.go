@@ -22,15 +22,15 @@ import (
 // @Failure 500 {object} utils.Error
 // @Router /users [post]
 func (h *Handler) SignUp(c echo.Context) error {
-	var u model.User
+	var user model.User
 	req := &userRegisterRequest{}
-	if err := req.bind(c, &u); err != nil {
+	if err := req.bind(c, &user); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
-	if err := h.userStore.Create(&u); err != nil {
+	if err := h.userStore.Create(&user); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
-	return c.JSON(http.StatusCreated, newUserResponse(&u))
+	return c.JSON(http.StatusCreated, newUserResponse(&user))
 }
 
 // Login godoc

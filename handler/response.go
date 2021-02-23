@@ -19,14 +19,14 @@ type userResponse struct {
 	} `json:"user"`
 }
 
-func newUserResponse(u *model.User) *userResponse {
-	r := new(userResponse)
-	r.User.Username = u.Username
-	r.User.Email = u.Email
-	r.User.Bio = u.Bio
-	r.User.Image = u.Image
-	r.User.Token = utils.GenerateJWT(u.ID)
-	return r
+func newUserResponse(user *model.User) *userResponse {
+	userResponse := new(userResponse)
+	userResponse.User.Username = user.Username
+	userResponse.User.Email = user.Email
+	userResponse.User.Bio = user.Bio
+	userResponse.User.Image = user.Image
+	userResponse.User.Token = utils.GenerateJWT(user.ID)
+	return userResponse
 }
 
 type profileResponse struct {
@@ -38,13 +38,13 @@ type profileResponse struct {
 	} `json:"profile"`
 }
 
-func newProfileResponse(us user.Store, userID uint, u *model.User) *profileResponse {
-	r := new(profileResponse)
-	r.Profile.Username = u.Username
-	r.Profile.Bio = u.Bio
-	r.Profile.Image = u.Image
-	r.Profile.Following, _ = us.IsFollower(u.ID, userID)
-	return r
+func newProfileResponse(us user.Store, userID uint, user *model.User) *profileResponse {
+	profileResponse := new(profileResponse)
+	profileResponse.Profile.Username = user.Username
+	profileResponse.Profile.Bio = user.Bio
+	profileResponse.Profile.Image = user.Image
+	profileResponse.Profile.Following, _ = us.IsFollower(user.ID, userID)
+	return profileResponse
 }
 
 type articleResponse struct {
@@ -74,60 +74,60 @@ type articleListResponse struct {
 	ArticlesCount int                `json:"articlesCount"`
 }
 
-func newArticleResponse(c echo.Context, a *model.Article) *singleArticleResponse {
-	ar := new(articleResponse)
-	ar.TagList = make([]string, 0)
-	ar.Slug = a.Slug
-	ar.Title = a.Title
-	ar.Description = a.Description
-	ar.Body = a.Body
-	ar.CreatedAt = a.CreatedAt
-	ar.UpdatedAt = a.UpdatedAt
-	for _, t := range a.Tags {
-		ar.TagList = append(ar.TagList, t.Tag)
+func newArticleResponse(c echo.Context, article *model.Article) *singleArticleResponse {
+	articleResponse := new(articleResponse)
+	articleResponse.TagList = make([]string, 0)
+	articleResponse.Slug = article.Slug
+	articleResponse.Title = article.Title
+	articleResponse.Description = article.Description
+	articleResponse.Body = article.Body
+	articleResponse.CreatedAt = article.CreatedAt
+	articleResponse.UpdatedAt = article.UpdatedAt
+	for _, t := range article.Tags {
+		articleResponse.TagList = append(articleResponse.TagList, t.Tag)
 	}
-	for _, u := range a.Favorites {
+	for _, u := range article.Favorites {
 		if u.ID == userIDFromToken(c) {
-			ar.Favorited = true
+			articleResponse.Favorited = true
 		}
 	}
-	ar.FavoritesCount = len(a.Favorites)
-	ar.Author.Username = a.Author.Username
-	ar.Author.Image = a.Author.Image
-	ar.Author.Bio = a.Author.Bio
-	ar.Author.Following = a.Author.FollowedBy(userIDFromToken(c))
-	return &singleArticleResponse{ar}
+	articleResponse.FavoritesCount = len(article.Favorites)
+	articleResponse.Author.Username = article.Author.Username
+	articleResponse.Author.Image = article.Author.Image
+	articleResponse.Author.Bio = article.Author.Bio
+	articleResponse.Author.Following = article.Author.FollowedBy(userIDFromToken(c))
+	return &singleArticleResponse{articleResponse}
 }
 
 func newArticleListResponse(us user.Store, userID uint, articles []model.Article, count int) *articleListResponse {
-	r := new(articleListResponse)
-	r.Articles = make([]*articleResponse, 0)
-	for _, a := range articles {
-		ar := new(articleResponse)
-		ar.TagList = make([]string, 0)
-		ar.Slug = a.Slug
-		ar.Title = a.Title
-		ar.Description = a.Description
-		ar.Body = a.Body
-		ar.CreatedAt = a.CreatedAt
-		ar.UpdatedAt = a.UpdatedAt
-		for _, t := range a.Tags {
-			ar.TagList = append(ar.TagList, t.Tag)
+	articleListResponse := new(articleListResponse)
+	articleListResponse.Articles = make([]*articleResponse, 0)
+	for _, article := range articles {
+		articleResponse := new(articleResponse)
+		articleResponse.TagList = make([]string, 0)
+		articleResponse.Slug = article.Slug
+		articleResponse.Title = article.Title
+		articleResponse.Description = article.Description
+		articleResponse.Body = article.Body
+		articleResponse.CreatedAt = article.CreatedAt
+		articleResponse.UpdatedAt = article.UpdatedAt
+		for _, tag := range article.Tags {
+			articleResponse.TagList = append(articleResponse.TagList, tag.Tag)
 		}
-		for _, u := range a.Favorites {
+		for _, u := range article.Favorites {
 			if u.ID == userID {
-				ar.Favorited = true
+				articleResponse.Favorited = true
 			}
 		}
-		ar.FavoritesCount = len(a.Favorites)
-		ar.Author.Username = a.Author.Username
-		ar.Author.Image = a.Author.Image
-		ar.Author.Bio = a.Author.Bio
-		ar.Author.Following, _ = us.IsFollower(a.AuthorID, userID)
-		r.Articles = append(r.Articles, ar)
+		articleResponse.FavoritesCount = len(article.Favorites)
+		articleResponse.Author.Username = article.Author.Username
+		articleResponse.Author.Image = article.Author.Image
+		articleResponse.Author.Bio = article.Author.Bio
+		articleResponse.Author.Following, _ = us.IsFollower(article.AuthorID, userID)
+		articleListResponse.Articles = append(articleListResponse.Articles, articleResponse)
 	}
-	r.ArticlesCount = count
-	return r
+	articleListResponse.ArticlesCount = count
+	return articleListResponse
 }
 
 type commentResponse struct {
@@ -165,22 +165,22 @@ func newCommentResponse(c echo.Context, cm *model.Comment) *singleCommentRespons
 }
 
 func newCommentListResponse(c echo.Context, comments []model.Comment) *commentListResponse {
-	r := new(commentListResponse)
+	commentListResponse := new(commentListResponse)
 	cr := commentResponse{}
-	r.Comments = make([]commentResponse, 0)
-	for _, i := range comments {
-		cr.ID = i.ID
-		cr.Body = i.Body
-		cr.CreatedAt = i.CreatedAt
-		cr.UpdatedAt = i.UpdatedAt
-		cr.Author.Username = i.User.Username
-		cr.Author.Image = i.User.Image
-		cr.Author.Bio = i.User.Bio
-		cr.Author.Following = i.User.FollowedBy(userIDFromToken(c))
+	commentListResponse.Comments = make([]commentResponse, 0)
+	for _, comment := range comments {
+		cr.ID = comment.ID
+		cr.Body = comment.Body
+		cr.CreatedAt = comment.CreatedAt
+		cr.UpdatedAt = comment.UpdatedAt
+		cr.Author.Username = comment.User.Username
+		cr.Author.Image = comment.User.Image
+		cr.Author.Bio = comment.User.Bio
+		cr.Author.Following = comment.User.FollowedBy(userIDFromToken(c))
 
-		r.Comments = append(r.Comments, cr)
+		commentListResponse.Comments = append(commentListResponse.Comments, cr)
 	}
-	return r
+	return commentListResponse
 }
 
 type tagListResponse struct {
@@ -188,9 +188,9 @@ type tagListResponse struct {
 }
 
 func newTagListResponse(tags []model.Tag) *tagListResponse {
-	r := new(tagListResponse)
-	for _, t := range tags {
-		r.Tags = append(r.Tags, t.Tag)
+	tagListResponse := new(tagListResponse)
+	for _, tag := range tags {
+		tagListResponse.Tags = append(tagListResponse.Tags, tag.Tag)
 	}
-	return r
+	return tagListResponse
 }

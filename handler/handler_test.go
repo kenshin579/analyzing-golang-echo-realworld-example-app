@@ -61,34 +61,34 @@ func responseMap(b []byte, key string) map[string]interface{} {
 }
 
 func loadFixtures() error {
-	u1bio := "user1 bio"
-	u1image := "http://realworld.io/user1.jpg"
-	u1 := model.User{
+	user1BioText := "user1 bio"
+	user1Image := "http://realworld.io/user1.jpg"
+	user1 := model.User{
 		Username: "user1",
 		Email:    "user1@realworld.io",
-		Bio:      &u1bio,
-		Image:    &u1image,
+		Bio:      &user1BioText,
+		Image:    &user1Image,
 	}
-	u1.Password, _ = u1.HashPassword("secret")
-	if err := us.Create(&u1); err != nil {
+	user1.Password, _ = user1.HashPassword("secret")
+	if err := us.Create(&user1); err != nil {
 		return err
 	}
 
-	u2bio := "user2 bio"
-	u2image := "http://realworld.io/user2.jpg"
-	u2 := model.User{
+	user2BioText := "user2 bio"
+	user2Image := "http://realworld.io/user2.jpg"
+	user2 := model.User{
 		Username: "user2",
 		Email:    "user2@realworld.io",
-		Bio:      &u2bio,
-		Image:    &u2image,
+		Bio:      &user2BioText,
+		Image:    &user2Image,
 	}
-	u2.Password, _ = u2.HashPassword("secret")
-	if err := us.Create(&u2); err != nil {
+	user2.Password, _ = user2.HashPassword("secret")
+	if err := us.Create(&user2); err != nil {
 		return err
 	}
-	us.AddFollower(&u2, u1.ID)
+	us.AddFollower(&user2, user1.ID)
 
-	a := model.Article{
+	article := model.Article{
 		Slug:        "article1-slug",
 		Title:       "article1 title",
 		Description: "article1 description",
@@ -103,21 +103,21 @@ func loadFixtures() error {
 			},
 		},
 	}
-	as.CreateArticle(&a)
-	as.AddComment(&a, &model.Comment{
+	as.CreateArticle(&article)
+	as.AddComment(&article, &model.Comment{
 		Body:      "article1 comment1",
 		ArticleID: 1,
 		UserID:    1,
 	})
 
-	a2 := model.Article{
+	article2 := model.Article{
 		Slug:        "article2-slug",
 		Title:       "article2 title",
 		Description: "article2 description",
 		Body:        "article2 body",
 		AuthorID:    2,
 		Favorites: []model.User{
-			u1,
+			user1,
 		},
 		Tags: []model.Tag{
 			{
@@ -125,13 +125,13 @@ func loadFixtures() error {
 			},
 		},
 	}
-	as.CreateArticle(&a2)
-	as.AddComment(&a2, &model.Comment{
+	as.CreateArticle(&article2)
+	as.AddComment(&article2, &model.Comment{
 		Body:      "article2 comment1 by user1",
 		ArticleID: 2,
 		UserID:    1,
 	})
-	as.AddFavorite(&a2, 1)
+	as.AddFavorite(&article2, 1)
 
 	return nil
 }
