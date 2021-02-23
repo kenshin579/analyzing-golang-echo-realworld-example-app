@@ -15,7 +15,7 @@ func New() *gorm.DB {
 	if err != nil {
 		fmt.Println("storage err: ", err)
 	}
-	db.DB().SetMaxIdleConns(3)
+	db.DB().SetMaxIdleConns(3) //todo: db connection 정보 이런 건 config에 있는게 좋아보인다
 	db.LogMode(true)
 	return db
 }
